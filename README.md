@@ -95,3 +95,6 @@ function createArrOfSize(size) {
 montage *.png -background "#dcdcdc"  -geometry 120x120 montage.jpg
 */
 ```
+
+![](https://github.com/hibernationTheory/headless-render/blob/master/examples/02/montage.jpg)
+**image inspired by this [sketch](https://www.openprocessing.org/sketch/415113)**
