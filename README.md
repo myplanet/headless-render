@@ -2,7 +2,7 @@
 
 Capture the content of the canvas elements in a given url and return an array of base64 data to be rendered into a file. Can be used for rendering the canvas drawings that created using front-end libraries (like [chart.js](http://www.chartjs.org/), [p5.js](https://p5js.org/), etc.) on the backend.
 
-Promise based. Uses Phantom.js and Casper.js for headless rendering and datauri for converting the given html to a datauri.
+Promise based. Uses Phantom.js and Casper.js for headless rendering and datauri for converting the given html to datauri format.
 
 ## Examples
 
