@@ -10,14 +10,15 @@ console.error = function () {
 var url = casper.cli.args[0];
 var sizeX = casper.cli.args[1];
 var sizeY = casper.cli.args[2];
+var clientScripts = casper.cli.args[3];
 
-render(casper, url, sizeX, sizeY);
+render(casper, url, sizeX, sizeY, clientScripts);
 
 /**
-* addBind adds the bind method to the Function prototype
+* addBind polyfills the bind function
 */
 function addBind() {
-    // from this topic: https://github.com/ariya/phantomjs/issues/10522
+    // from this issue: https://github.com/ariya/phantomjs/issues/10522
     if (!Function.prototype.bind) {
         Function.prototype.bind = function(oThis) {
             if (typeof this !== 'function') {
@@ -48,12 +49,19 @@ function addBind() {
 }
 
 
-function render(casper, url, sizeX, sizeY) {
+function render(casper, url, sizeX, sizeY, clientScripts) {
     var imageData;
     casper.options.viewportSize = {
         'width':sizeX,
         'height':sizeY
     };
+
+    if (clientScripts) {
+        clientScripts = clientScripts.split(',');
+        for (var i = 0; i < clientScripts.length; i++) {
+            casper.options.clientScripts.push(clientScripts[i] + '.js')
+        }
+    }
 
     casper.on('page.initialized', function() {
         this.evaluate(addBind);
@@ -68,7 +76,7 @@ function render(casper, url, sizeX, sizeY) {
     });
 
     casper.start(url, function() {
-        // any initialization scripts that needs to be run goes here.
+        // scripts to be executed once the page is loaded.
     });
 
     casper.then(function() {
