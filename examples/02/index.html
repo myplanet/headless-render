@@ -1,0 +1,77 @@
+<html>
+<head>
+  <meta charset="UTF-8">
+  <script src="http://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.8/p5.js"></script>
+</head>
+
+<body>
+  <script type="text/javascript">
+new p5();
+
+function setup() {
+  createCanvas(windowWidth, windowHeight);
+	angleMode(DEGREES);
+	noLoop();
+} 
+
+function draw() { 
+  background(220);
+	noFill();
+	strokeWeight(1);
+	stroke(0, 0, 0, 40);
+
+	var amount = 8;
+	var size = windowWidth/2;
+	var arcAmount = random(20, windowWidth/2);
+	var startAngle = random(0, 200);
+	var endAngle = startAngle + random(60, 160);
+	var randomAmount = random(40, 300);
+	var r = random(0, 180);
+	
+	for (var i = 0; i < amount; i++) {
+		drawArcs({
+			amount: arcAmount,
+			w: size,
+			h: size,
+			startAngle: startAngle,
+			endAngle: 220,
+			randomAmount: 160,
+			seed: i * 1000,
+			rotate: r
+		});
+	}
+
+}
+
+function drawArcs(settings) {
+	var amount = settings.amount;
+	var w = settings.w;
+	var h = settings.h;
+	var startAngle = settings.startAngle;
+	var endAngle = settings.endAngle;
+	var randomAmount = settings.randomAmount;
+	var seed = settings.seed;
+	var r = settings.r;
+	
+	randomSeed(seed);
+	
+	push();
+	translate(width/2, height/2);
+	rotate(r);
+	for (var i = 0; i < amount; i++) {
+		// arc: x-coord, y-coord, width, height
+		arc(
+			0, 
+			0, 
+			w+i, 
+			h+i, 
+			startAngle, 
+			endAngle + randomAmount * noise(i + random(0, 100000))
+		);
+	}
+	
+	pop();
+}
+  </script>
+</body>
+</html>
