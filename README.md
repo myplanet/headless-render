@@ -1,8 +1,12 @@
 # Headless Render
 
-Capture the content of the canvas elements in a given url and return an array of base64 data to be rendered into a file. Can be used for rendering the canvas drawings that created using front-end libraries (like [chart.js](http://www.chartjs.org/), [p5.js](https://p5js.org/), etc.) on the backend.
+Capture the content of all the canvas elements in a given url and return an array of buffer data to be rendered into a file. Can be used for rendering the canvas drawings that created using front-end libraries (like [chart.js](http://www.chartjs.org/), [p5.js](https://p5js.org/), etc.) on the backend.
 
-Promise based. Uses Phantom.js and Casper.js for headless rendering and datauri for converting the given html to datauri format.
+Promise based. Uses **Phantom.js** and **Casper.js** for headless rendering and **datauri** for converting the given html to datauri format.
+
+## Known Issues
+
+- Silently fails when the CDN used in the html file points to a `https` address. You could either point to a `http` file or pass the library through clientScripts.
 
 ## Examples
 
@@ -18,14 +22,10 @@ const sizeX = 500;
 const sizeY = 500;
 
 return render(url, sizeX, sizeY).then((data) => {
-    // the render function captures the content of multiple canvas elements in a page, 
+    // the render function captures the content of all the canvas elements and returns an array, 
     // we are grabbing the first one.
-    const dataUri = data[0]; 
-    const base64Data = dataUri.split(',')[1];
-    const buffer = Buffer.from(base64Data, 'base64');
-
     return new Promise((resolve, reject) => {
-        fs.writeFile(`./image.png`, new Buffer(buffer, 'base64'), (err, response) => {
+        fs.writeFile(`./image.png`, data[0], (err, response) => {
             if (err) {
                 console.log(err);
                 reject(err);
@@ -62,12 +62,10 @@ datauri('./index.html').then((url) => {
     Promise.map(createArrOfSize(amount), (item, index) => {
 
         return render(url, sizeX, sizeY, clientScripts).then((data) => {
-            const dataUri = data[0];
-            const base64Data = dataUri.split(',')[1];
-            const buffer = Buffer.from(base64Data, 'base64');
-
+            // the render function captures the content of all the canvas elements and returns an array, 
+            // we are grabbing the first one.
             return new Promise((resolve, reject) => {
-                fs.writeFile(`./image-${index}.png`, new Buffer(buffer, 'base64'), (err, response) => {
+                fs.writeFile(`./image-${index}.png`, data[0], (err, response) => {
                     if (err) {
                         console.log(err);
                         reject(err);
@@ -89,11 +87,6 @@ function createArrOfSize(size) {
     }
     return arr;
 }
-
-// imagemagick command to create a grid of images:
-/*
-montage *.png -background "#dcdcdc"  -geometry 120x120 montage.jpg
-*/
 ```
 
 ![](https://github.com/hibernationTheory/headless-render/blob/master/examples/02/montage.jpg)

@@ -20,12 +20,10 @@ datauri('./index.html').then((url) => {
 	Promise.map(createArrOfSize(amount), (item, index) => {
 
 		return render(url, sizeX, sizeY, clientScripts).then((data) => {
-			const dataUri = data[0];
-			const base64Data = dataUri.split(',')[1];
-			const buffer = Buffer.from(base64Data, 'base64');
-
+			// the render function captures the content of all the canvas elements and returns an array, 
+			// we are grabbing the first one.
 			return new Promise((resolve, reject) => {
-				fs.writeFile(`./image-${index}.png`, new Buffer(buffer, 'base64'), (err, response) => {
+				fs.writeFile(`./image-${index}.png`, data[0], (err, response) => {
 					if (err) {
 						console.log(err);
 						reject(err);

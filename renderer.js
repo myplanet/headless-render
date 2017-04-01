@@ -59,7 +59,7 @@ function render(casper, url, sizeX, sizeY, clientScripts) {
     if (clientScripts) {
         clientScripts = clientScripts.split(',');
         for (var i = 0; i < clientScripts.length; i++) {
-            casper.options.clientScripts.push(clientScripts[i] + '.js')
+            casper.options.clientScripts.push(clientScripts[i]);
         }
     }
 

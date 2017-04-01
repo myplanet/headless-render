@@ -23,8 +23,14 @@ function rendererInit(url, sizeX, sizeY, clientScripts) {
             const endTime = Date.now();
             const duration = new Date(endTime - startTime).getSeconds();
             console.log(`Finished rendering in ${duration} seconds`);
-            const imageData = JSON.parse(output.join(''));
-            resolve(imageData);
+            let imageData = JSON.parse(output.join(''));
+            let bufferData = imageData.map((data) => {
+                let base64Data = data.split(',')[1];
+                let buffer = Buffer.from(base64Data, 'base64');
+                return new Buffer(buffer, 'base64')
+            });
+
+            resolve(bufferData);
         });
     });
 }
